@@ -36,7 +36,12 @@ SHELL:
 export TOKEN="YOUR API TOKEN"
 export ROOT_PASS="aComplexP@ssword"
 export SOA_EMAIL_ADDRESS="email@domain.com"
-export SPLUNK_USER="aComplexP@ssword"
+export SPLUNK_USER="admin"
+export ACCESS_TOKEN_PASSWORD="akab-foobar"
+export CLIENT_SECRET_PASSWORD="foobar="
+export CLIENT_TOKEN_PASSWORD="akab-foobar"
+export HOSTNAME="foobar.luna.akamaiapis.net"
+export SECURITY_CONFIG_ID="1234"
 
 curl -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${TOKEN}" \
@@ -49,6 +54,11 @@ curl -H "Content-Type: application/json" \
       "stackscript_data": {
         "disable_root": "no/yes",
         "splunk_user": "${SPLUNK_USER}",
+        "access_token_password": "${ACCESS_TOKEN_PASSWORD}",
+        "client_secret_password": "${CLIENT_SECRET_PASSWORD}",
+        "client_token_password": "${CLIENT_TOKEN_PASSWORD}",
+        "hostname": "${HOSTNAME}",
+        "security_config_id": "${SECURITY_CONFIG_ID}",
         "soa_email_address": "${SOA_EMAIL_ADDRESS}"
       },
       "authorized_users": [
@@ -69,7 +79,12 @@ CLI:
 export TOKEN="YOUR API TOKEN"
 export ROOT_PASS="aComplexP@ssword"
 export SOA_EMAIL_ADDRESS="email@domain.com"
-export SPLUNK_USER="aComplexP@ssword"
+export SPLUNK_USER="admin"
+export ACCESS_TOKEN_PASSWORD="akab-foobar"
+export CLIENT_SECRET_PASSWORD="foobar="
+export CLIENT_TOKEN_PASSWORD="akab-foobar"
+export HOSTNAME="foobar.luna.akamaiapis.net"
+export SECURITY_CONFIG_ID="1234"
 
 linode-cli linodes create \
   --label linode123 \
@@ -77,7 +92,7 @@ linode-cli linodes create \
   --booted true \
   --stackscript_id 00000000000 \
   --stackscript_data '{"soa_email_address": "${SOA_EMAIL_ADDRESS}", "disable_root": "no/yes",
-  "splunk_user": "${SPLUNK_USER}" }' \
+  "splunk_user": "${SPLUNK_USER}", "access_token_password": "${ACCESS_TOKEN_PASSWORD}", "client_secret_password": "${CLIENT_SECRET_PASSWORD}", "client_token_password": "${CLIENT_TOKEN_PASSWORD}", "hostname": "${HOSTNAME}", "security_config_id": "${SECURITY_CONFIG_ID}" }' \
   --region us-east \
   --type g6-standard-2 \
   --authorized_keys "ssh-rsa AAAA_valid_public_ssh_key_123456785== user@their-computer"
