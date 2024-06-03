@@ -9,5 +9,6 @@ polling==0.3.2
 ansible-specdoc==0.0.14
 pyyaml==6.0.1
 dnspython==2.2.1
+jmespath==1.0.1
 ## htpasswd req
 passlib==1.7.4
