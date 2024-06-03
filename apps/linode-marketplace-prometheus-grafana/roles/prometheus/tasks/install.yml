@@ -16,7 +16,7 @@
 
 - name: set latest prometheus version
   set_fact:
-    prometheus_version: '{{ latest_prom.json | json_query('tag_name') }}'
+    prometheus_version: "{{ latest_prom.json | json_query('tag_name') }}"
 
 - name: download prometheus latest 
   get_url: 
