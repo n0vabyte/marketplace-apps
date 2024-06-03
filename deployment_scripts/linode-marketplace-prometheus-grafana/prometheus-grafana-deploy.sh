@@ -16,7 +16,7 @@ fi
 #<UDF name="soa_email_address" label="Email address (for the Let's Encrypt SSL certificate)" example="user@domain.tld">
 
 ## Prometheus Settings
-# <UDF name="remote_ips" lable="Remote IPs to scrape with Prometheus. Requires CSV list." default="">
+# <UDF name="remote_ips" label="Remote IPs to scrape with Prometheus. Requires CSV list." default="">
 
 # git repo
 export GIT_REPO="https://github.com/akamai-compute-marketplace/marketplace-apps.git"
