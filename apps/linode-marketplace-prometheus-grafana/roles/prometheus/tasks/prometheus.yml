@@ -5,9 +5,9 @@
   copy: 
     src: 'files/prometheus.yml'
     dest: '/etc/prometheus/prometheus.yml'
-  mode: 0644
-  group: prometheus
-  owner: prometheus
+    mode: 0644
+    group: prometheus
+    owner: prometheus
 
 #- name: make targets directory
 #  file: 

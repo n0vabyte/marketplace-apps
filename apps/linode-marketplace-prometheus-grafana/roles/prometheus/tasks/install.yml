@@ -16,14 +16,7 @@
 
 - name: set latest prometheus version
   set_fact:
-    prometheus_version: '{{ latest_prom.content | trim }}'
-
-# debug
-- name: failing for dbg
-  fail:
-    msg: 'failing for dbg'
-  run_once: true
-  delegate_to: localhost    
+    prometheus_version: '{{ latest_prom.json | json_query('tag_name') }}'
 
 - name: download prometheus latest 
   get_url: 
