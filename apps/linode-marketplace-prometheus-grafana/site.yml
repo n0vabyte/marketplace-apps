@@ -11,6 +11,6 @@
   roles:
     - common
     - grafana
-    - promtheus
+    - prometheus
     #- prom_graf
     - post
