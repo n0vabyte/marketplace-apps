@@ -3,12 +3,12 @@
 
 - name: add grafana key
   get_url:
-    url: https://apt.grafana.com/gpg.key
+    url: 'https://apt.grafana.com/gpg.key'
     dest: '/usr/share/keyrings/grafana.key'
 
 - name: add grafana repo
   apt_repository: 
-    repo: "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main"
+    repo: 'deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main'
     state: present
     update_cache: true
 
@@ -17,7 +17,7 @@
     pkg: grafana
     state: present
 
-- name: update grafana admin
+- name: update grafana config
   lineinfile:
     path: '/etc/grafana/grafana.ini'
     regex: '^\;admin_user = admin'

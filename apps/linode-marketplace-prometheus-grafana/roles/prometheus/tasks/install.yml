@@ -1,15 +1,17 @@
 ---
 # install latest prometheus
+
 - name: create prometheus data dir
   file: 
-    path: '/var/lib/prometheus/'
+    path: '/var/lib/prometheus'
     state: directory
+    mode: 0755
     owner: prometheus
     group: prometheus
 
 - name: get latest prometheus version
   uri:
-    url: "https://api.github.com/repos/prometheus/prometheus/releases/latest"
+    url: 'https://api.github.com/repos/prometheus/prometheus/releases/latest'
     return_content: true
     status_code: 200
   register: latest_prom
@@ -37,27 +39,11 @@
 
 - name: moving prometheus to config directory
   copy:
-    src: '/tmp/prometheus-{{ prometheus_version }}.linux-amd64/'
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/"
     dest: '/etc/prometheus/'
     mode: 0755
     owner: prometheus
     group: prometheus
-
-#- name: moving prometheus binary to path
-#  copy: 
-#    src: '/etc/prometheus/prometheus'
-#    dest: '/usr/local/bin/prometheus'
-#    mode: 0755
-#    owner: prometheus
-#    group: prometheus
-#
-#- name: moving promtool binary to path
-#  copy: 
-#    src: '/etc/prometheus/promtool'
-#    dest: '/usr/local/bin/promtool'
-#    mode: 0755
-#    owner: prometheus
-#    group: prometheus
 
 - name: move prometheus binaries to path
   copy:
@@ -67,14 +53,14 @@
     owner: prometheus
     group: prometheus
   loop:
-    - "prometheus"
-    - "promtool"
+    - 'prometheus'
+    - 'promtool'
 
 - name: remove binaries from etc directory
   file: 
     path:
-      - "/etc/prometheus/prometheus"
-      - "/etc/prometheus/promtool"
+      - '/etc/prometheus/prometheus'
+      - '/etc/prometheus/promtool'
     state: absent
 
 - name: create rules and targets directories
@@ -85,5 +71,5 @@
     owner: prometheus
     group: prometheus
   loop:
-    - "/etc/prometheus/file_sd_targets"
-    - "/etc/prometheus/rules"
+    - '/etc/prometheus/file_sd_targets'
+    - '/etc/prometheus/rules'

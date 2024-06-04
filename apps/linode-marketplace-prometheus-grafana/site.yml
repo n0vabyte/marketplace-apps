@@ -1,6 +1,7 @@
-# linode ansible playbook
+---
+# prometheus and grafana playbook
 
-- name: Prometheus & Grafana deploy
+- name: deploy prometheus and grafana
   hosts: localhost
   connection: local
   gather_facts: true
@@ -12,5 +13,4 @@
     - common
     - grafana
     - prometheus
-    #- prom_graf
     - post

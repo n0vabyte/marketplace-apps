@@ -13,9 +13,9 @@
     src: 'templates/nginx.conf.j2'
     dest: '/etc/nginx/sites-available/{{ _domain }}'
 
-- name: create prometheus htaccess
+- name: secure prometheus with htaccess
   community.general.htpasswd:
-    path: /etc/nginx/.prometheus_htpasswd
+    path: '/etc/nginx/.prometheus_htpasswd'
     name: prometheus
     password: '{{ prometheus_htpasswd }}'
     state: present

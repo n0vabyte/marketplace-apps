@@ -9,51 +9,14 @@
     group: prometheus
     owner: prometheus
 
-#- name: make targets directory
-#  file: 
-#    path: /etc/prometheus/file_sd_targets/
-#    state: directory
-#    mode: 0755
-#    owner: prometheus
-#    group: prometheus
-
 - name: add local target file
   copy:
-    src: files/local_prometheus_scrape.yml
-    dest: /etc/prometheus/file_sd_targets/local_prometheus.yml
+    src: 'files/local_prometheus_scrape.yml'
+    dest: '/etc/prometheus/file_sd_targets/local_prometheus.yml'
     mode: 0755
     owner: prometheus
     group: prometheus
-# - name: add udf supplied endpoints
-#   template:
-#     src: 'templates/remote_scrape.yml'
-#     dest: '/etc/prometheus/file_sd_targest/remote_targets.yml'
-# 
-# split udf as comma seperated value?  
-# 
-# - name: add remote job configs
-#   blockinfile:
-#     path: '/etc/prometheus/prometheus.yml'
-#      block: |
-#        - job_name: remote_targets.yml
-#          scrape_interval: 3s
-#          file_sd_configs:
-#        - files:
-#          - file_sd_targets/remote_targets.yml
-#          honor_labels: true
-#          relabel_configs:
-#          - regex: (.*)
-#            replacement: \${1}:9100
-#            source_labels:
-#            - __address__
-#            target_label: __address__
-#          - regex: (.+)
-#            replacement: \${1}
-#            source_labels:
-#          - __instance
-#            target_label: instance
-#     insertafter: EOF
-# 
+ 
 - name: add prometheus service file
   template:
     src: 'templates/prometheus.service.j2'
