@@ -79,10 +79,11 @@
 
 - name: create rules and targets directories
   file: 
-    path: 
-      - "/etc/prometheus/file_sd_targets"
-      - "/etc/prometheus/rules"
+    path: "{{ item }}"
     state: directory
     mode: 0755
     owner: prometheus
     group: prometheus
+  loop:
+    - "/etc/prometheus/file_sd_targets"
+    - "/etc/prometheus/rules"
