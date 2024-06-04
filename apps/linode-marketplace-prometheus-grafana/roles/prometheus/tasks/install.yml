@@ -16,7 +16,7 @@
 
 - name: set latest prometheus version
   set_fact:
-    prometheus_version: "{{ latest_prom.json | json_query('tag_name') | split('v') | join() }}"
+    prometheus_version: "{{ latest_prom.json.tag_name[1:] }}"
 
 - name: download prometheus latest 
   get_url: 
@@ -80,8 +80,8 @@
 - name: create rules and targets directories
   file: 
     path: 
-      - /etc/prometheus/file_sd_targets
-      - /etc/prometheus/rules
+      - "/etc/prometheus/file_sd_targets"
+      - "/etc/prometheus/rules"
     state: directory
     mode: 0755
     owner: prometheus
