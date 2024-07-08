@@ -5,9 +5,9 @@
     name: hostname
 
   # sets account ssh pubkey to limited user
-- name: set ssh pubkey
-  import_role:
-    name: sshkey
+#- name: set ssh pubkey
+#  import_role:
+#    name: sshkey
   
 - name: disable root login
   import_role: 

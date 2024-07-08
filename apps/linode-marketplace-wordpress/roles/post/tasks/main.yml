@@ -37,6 +37,10 @@
   import_role:
     name: sudouser
 
+- name: set ssh pubkey
+  import_role:
+    name: sshkey
+
 # motd and creds gen
 - name: copy MOTD template to /etc/motd
   template:
