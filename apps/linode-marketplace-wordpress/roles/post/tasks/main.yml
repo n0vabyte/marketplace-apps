@@ -31,6 +31,12 @@
     name: data_exporter
   when: prometheus_exporter != 'none'
 
+# create sudo user
+
+- name: generating sudo user and password 
+  import_role:
+    name: sudouser
+
 # motd and creds gen
 - name: copy MOTD template to /etc/motd
   template:
