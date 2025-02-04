@@ -1,0 +1,20 @@
+---
+# destroy instance
+
+- name: get instance info 
+  linode.cloud.api_request:
+    api_token: '{{ token }}'
+    path: 'linode/instances/{{ linode_id }}'
+    method: GET
+  register: instance_info
+
+- name: set instance label
+  set_fact:
+    instance_label: "{{ instance_info.body['label']  }}"
+
+- name: removing instance 
+  linode.cloud.instance:
+    label: '{{ instance_label }}'
+    api_token: '{{ token }}'
+    state: absent
+

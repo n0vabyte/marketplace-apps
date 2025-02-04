@@ -1,0 +1,54 @@
+---
+# This helper allows us to send data to an authentication endpoint for logging. 
+# The following variables are required for this to run successfully. 
+# This should be included in the deploy script: 
+#
+# mode: 'staging'
+# username: ''
+# password: ''
+# authserver: 'https://endpoint:5000/request-access'
+# data_endpoint: 'https://endpoint:5000/secure-data'
+#
+# This should exported variables into the env
+
+- name: setting staging env
+  set_fact:
+    kc_username: "{{ lookup('env', 'KC_USERNAME')  }}"
+    kc_password: "{{ lookup('env', 'KC_PASSWORD')  }}"
+    kc_server: "{{ lookup('env', 'KC_SERVER')  }}"
+    data_endpoint: "{{ lookup('env', 'DATA_ENDPOINT')  }}"
+    
+- name: obtain temp token from auth server
+  uri:
+    url: "{{ kc_server }}" 
+    method: POST
+    body_format: json
+    status_code: [200]
+    return_content: true
+    body:
+      username: "{{ kc_username }}"
+      password: "{{ kc_password }}"
+    headers:
+      Content-Type: 'application/json'
+  register: auth_token
+  
+- name: status check
+  debug: 
+    msg: 'the request failed with {{ auth_token.json }}'
+  when: auth_token.status == 401
+
+- name: sending deployment status
+  uri:
+    url: "{{ data_endpoint }}"
+    method: POST
+    body_format: json
+    body:
+      id: "1234"
+      label: 'Wordpress OCA'
+      status: '{{ deploy_status }}'
+      branch: 'main'
+      gituser: 'esegura'
+      runjob: 'esegura-run'
+    headers:
+      Content-Type: 'application/json'
+      Authorization: "{{ auth_token.json.token }}"
