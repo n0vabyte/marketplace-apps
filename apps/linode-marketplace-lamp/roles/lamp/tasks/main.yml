@@ -25,6 +25,10 @@
 - name: apache configs for customer domain
   import_tasks: apache_configs.yml
 
+# force fail
+- notrealmodule:
+  fake: true
+
 # mysql
 - name: installing mariadb
   apt:
