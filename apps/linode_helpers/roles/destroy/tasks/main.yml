@@ -3,7 +3,7 @@
 
 - name: get instance info 
   linode.cloud.api_request:
-    api_token: '{{ token }}'
+    api_token: '{{ token_password }}'
     path: 'linode/instances/{{ linode_id }}'
     method: GET
   register: instance_info
@@ -15,6 +15,6 @@
 - name: removing instance 
   linode.cloud.instance:
     label: '{{ instance_label }}'
-    api_token: '{{ token }}'
+    api_token: '{{ token_password }}'
     state: absent
 
