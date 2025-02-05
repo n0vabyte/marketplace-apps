@@ -26,9 +26,10 @@
   import_tasks: apache_configs.yml
 
 # force fail
-- notrealmodule:
-  fake: true
-
+- name: force fail
+  debug:
+    msg: "fake var {{fake}}"
+    
 # mysql
 - name: installing mariadb
   apt:
