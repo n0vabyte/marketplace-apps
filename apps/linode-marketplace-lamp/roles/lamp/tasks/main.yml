@@ -25,11 +25,6 @@
 - name: apache configs for customer domain
   import_tasks: apache_configs.yml
 
-# force fail
-- name: force fail
-  debug:
-    msg: "fake var {{fake}}"
-    
 # mysql
 - name: installing mariadb
   apt:
