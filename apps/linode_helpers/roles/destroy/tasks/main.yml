@@ -4,7 +4,7 @@
 - name: get instance info 
   linode.cloud.api_request:
     api_token: '{{ token_password }}'
-    path: 'linode/instances/{{ linode_id }}'
+    path: "linode/instances/{{ lookup('env', 'LINODE_ID') }}"
     method: GET
   register: instance_info
 
