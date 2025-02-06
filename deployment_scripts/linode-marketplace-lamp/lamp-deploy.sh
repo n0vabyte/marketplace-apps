@@ -65,7 +65,10 @@ EOF
 
   if [[ "${MODE}" == "staging" ]]; then
     echo "[info] running in staging mode..."
-    echo "mode: ${MODE}" >> ${group_vars};
+    echo "mode: ${MODE}" >> ${group_vars}
+  else
+    echo "[info] running in production mode..."
+    echo "mode: production" >> ${group_vars}
   fi
 }
 
