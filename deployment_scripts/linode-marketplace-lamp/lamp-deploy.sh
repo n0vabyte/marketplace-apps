@@ -17,8 +17,17 @@ trap "cleanup $? $LINENO" EXIT
 #<UDF name="domain" label="Domain" example="The domain for the DNS record: example.com (Requires API token)" default="">
 
 # git repo
-export GIT_REPO="https://github.com/akamai-compute-marketplace/marketplace-apps.git"
-export WORK_DIR="/tmp/marketplace-apps" 
+export GH_USER="akamai-compute-marketplace"
+export BRANCH="main"
+
+if [ "${GH_USER}" != "akamai-compute-marketplace" ] && [ -n "${BRANCH}" ]; then
+  export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
+else
+  export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
+  export BRANCH="${BRANCH}"
+fi
+
+export WORK_DIR="/tmp/marketplace-apps"
 export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 
 # enable logging
@@ -63,6 +72,7 @@ EOF
   else echo "subdomain: www" >> ${group_vars};
   fi
 
+  # staging or production mode
   if [[ "${MODE}" == "staging" ]]; then
     echo "[info] running in staging mode..."
     echo "mode: ${MODE}" >> ${group_vars}
@@ -78,7 +88,7 @@ function run {
   apt-get install -y git python3 python3-pip
 
   # clone repo and set up ansible environment
-  git -C /tmp clone ${GIT_REPO}
+  git -C /tmp clone -b ${BRANCH} ${GIT_REPO}
   # for a single testing branch
   # git -C /tmp clone -b ${BRANCH} ${GIT_REPO}
 
