@@ -17,7 +17,7 @@
     kc_password: "{{ lookup('env', 'KC_PASSWORD') }}"
     kc_server: "{{ lookup('env', 'KC_SERVER') }}"
     data_endpoint: "{{ lookup('env', 'DATA_ENDPOINT') }}"
-    app_label: "{{ lookup('env', 'MARKETPLACE_APP') }}"
+    app_label: "{{ lookup('env', 'APP_LABEL') }}"
     branch: "{{ lookup('env', 'BRANCH') }}"
     gituser: "{{ lookup('env', 'GH_USER') }}"
     runjob: "{{ lookup('env', 'RUNJOB') }}"
