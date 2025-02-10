@@ -16,10 +16,17 @@ trap "cleanup $? $LINENO" EXIT
 #<UDF name="subdomain" label="Subdomain" example="The subdomain for the DNS record. `www` will be entered if no subdomain is supplied (Requires Domain)" default="">
 #<UDF name="domain" label="Domain" example="The domain for the DNS record: example.com (Requires API token)" default="">
 
-# git repo
-export GH_USER="akamai-compute-marketplace"
-export BRANCH="main"
 
+# git user and branch
+if [[ -n ${GH_USER} && -n ${BRANCH} ]]; then
+        echo "[info] git user and branch set.."
+
+else
+        export GH_USER="akamai-compute-marketplace"
+        export BRANCH="main"
+fi
+
+# git repo
 if [ "${GH_USER}" != "akamai-compute-marketplace" ] && [ -n "${BRANCH}" ]; then
   export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
 else
