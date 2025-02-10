@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
-trap "cleanup $? $LINENO" EXIT
+DEBUG="YES"
+if [ "${DEBUG}" == "NO" ]; then
+  trap "cleanup $? $LINENO" EXIT
+fi
 
 #github_endpoint: 'https://raw.githubusercontent.com/akamai-compute-marketplace/marketplace-apps/main/deployment_scripts/linode-marketplace-lamp/lamp-deploy.sh'
 
@@ -120,4 +123,7 @@ function installation_complete {
 }
 # main
 run && installation_complete
-cleanup
+DEBUG="YES"
+if [ "${DEBUG}" == "NO" ]; then
+  cleanup
+fi
