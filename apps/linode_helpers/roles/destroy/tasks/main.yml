@@ -3,8 +3,8 @@
 
 - name: get instance info 
   linode.cloud.api_request:
-    #api_token: '{{ token_password }}'
-    api_token: "{{ lookup('env', 'TOKEN_PASSWORD') }}"
+    api_token: '{{ token_password }}'
+    #api_token: "{{ lookup('env', 'TOKEN_PASSWORD') }}"
     path: "linode/instances/{{ lookup('env', 'LINODE_ID') }}"
     method: GET
   register: instance_info
@@ -16,7 +16,7 @@
 - name: removing instance 
   linode.cloud.instance:
     label: '{{ instance_label }}'
-    #api_token: '{{ token_password }}'
-    api_token: "{{ lookup('env', 'TOKEN_PASSWORD') }}"
+    api_token: '{{ token_password }}'
+    #api_token: "{{ lookup('env', 'TOKEN_PASSWORD') }}"
     state: absent
 
