@@ -27,9 +27,9 @@
           import_tasks: ../linode_helpers/roles/cilog/tasks/main.yml
           vars:
             deploy_status: 'failed'
-      always:
-        - name: removing the instance
-          include_tasks: ../linode_helpers/roles/destroy/tasks/main.yml
+      #always:
+      #  - name: removing the instance
+      #    include_tasks: ../linode_helpers/roles/destroy/tasks/main.yml
       when: "mode == 'staging'"
 
     - name: running app normally

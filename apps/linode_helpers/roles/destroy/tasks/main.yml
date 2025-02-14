@@ -19,4 +19,3 @@
     api_token: '{{ token_password }}'
     #api_token: "{{ lookup('env', 'TOKEN_PASSWORD') }}"
     state: absent
-
