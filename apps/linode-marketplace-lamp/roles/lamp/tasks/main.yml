@@ -32,7 +32,6 @@
     - mariadb-server
     - python3-mysqldb
     state: present
-    fake: forcefail
   register: mariadb
 
 - name: running mysql secure installation
