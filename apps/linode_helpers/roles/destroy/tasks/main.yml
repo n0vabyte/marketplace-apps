@@ -1,4 +1,8 @@
 ---
+# I can get rid of this if not committed yet. We are gonna do this
+# from the controller ci-node.
+# ** delete me
+
 # destroy instance
 
 - name: get instance info 

@@ -19,6 +19,9 @@ fi
 #<UDF name="subdomain" label="Subdomain" example="The subdomain for the DNS record. `www` will be entered if no subdomain is supplied (Requires Domain)" default="">
 #<UDF name="domain" label="Domain" example="The domain for the DNS record: example.com (Requires API token)" default="">
 
+# repo
+#export GH_USER=""
+#export BRANCH=""
 
 # git user and branch
 if [[ -n ${GH_USER} && -n ${BRANCH} ]]; then

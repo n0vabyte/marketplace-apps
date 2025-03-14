@@ -1,15 +1,5 @@
 ---
-# This helper allows us to send data to an authentication endpoint for logging. 
-# The following variables are required for this to run successfully. 
-# This should be included in the deploy script: 
-#
-# mode: 'staging'
-# username: ''
-# password: ''
-# authserver: 'https://endpoint:5000/request-access'
-# data_endpoint: 'https://endpoint:5000/secure-data'
-#
-# This should exported variables into the env
+# set ci variables for logging
 
 - name: setting staging env
   set_fact:
@@ -21,6 +11,7 @@
     branch: "{{ lookup('env', 'BRANCH') }}"
     gituser: "{{ lookup('env', 'GH_USER') }}"
     runjob: "{{ lookup('env', 'RUNJOB') }}"
+    image: "{{ lookup('env', 'IMAGE') }}"
     
 - name: obtain temp token from auth server
   uri:
@@ -47,12 +38,12 @@
     method: POST
     body_format: json
     body:
-      #id: "1234"
       app_label: '{{ app_label }}'
       status: '{{ deploy_status }}'
       branch: '{{ branch }}'
       gituser: '{{ gituser }}'
       runjob: '{{ runjob }}'
+      image: '{{ image }}'
     headers:
       Content-Type: 'application/json'
       Authorization: "{{ auth_token.json.token }}"
