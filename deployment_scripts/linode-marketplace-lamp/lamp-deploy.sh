@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-DEBUG="YES"
+DEBUG="NO"
 if [ "${DEBUG}" == "NO" ]; then
   trap "cleanup $? $LINENO" EXIT
 fi
@@ -46,11 +46,27 @@ export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 # enable logging
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
+function provision_failure {
+# set token
+local token=($(curl -ks -X POST ${KC_SERVER} \
+     -H "Content-Type: application/json" \
+     -d "{ \"username\":\"${KC_USERNAME}\", \"password\":\"${KC_PASSWORD}\" }" | jq -r .token) )
+
+# send pre-provision failure
+curl -sk -X POST ${KC_SERVER} \
+     -H "Authorization: ${token}" \
+     -H "Content-Type: application/json" \
+     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"prefail\", "branch": \"${BRANCH}\", \
+        \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
+}
+
 function cleanup {
+  # send status
+  provision_failure
+
   if [ -d "${WORK_DIR}" ]; then
     rm -rf ${WORK_DIR}
   fi
-
 }
 
 function udf {
@@ -126,7 +142,6 @@ function installation_complete {
 }
 # main
 run && installation_complete
-DEBUG="YES"
 if [ "${DEBUG}" == "NO" ]; then
   cleanup
 fi
