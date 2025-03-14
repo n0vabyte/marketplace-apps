@@ -48,6 +48,8 @@ export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 function provision_failure {
+echo "[info] Provision failed. Sending status.."
+
 # dep
 apt install jq -y
 
