@@ -47,6 +47,9 @@ export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 function provision_failure {
+# dep
+apt install jq -y
+
 # set token
 local token=($(curl -ks -X POST ${KC_SERVER} \
      -H "Content-Type: application/json" \
