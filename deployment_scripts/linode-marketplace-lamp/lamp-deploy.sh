@@ -3,6 +3,7 @@ set -e
 DEBUG="NO"
 if [ "${DEBUG}" == "NO" ]; then
   trap "cleanup $? $LINENO" EXIT
+  trap "provision_failure $? $LINENO" ERR
 fi
 
 #github_endpoint: 'https://raw.githubusercontent.com/akamai-compute-marketplace/marketplace-apps/main/deployment_scripts/linode-marketplace-lamp/lamp-deploy.sh'
@@ -65,7 +66,7 @@ curl -sk -X POST ${DATA_ENDPOINT} \
 
 function cleanup {
   # send status
-  provision_failure
+  #provision_failure
 
   if [ -d "${WORK_DIR}" ]; then
     rm -rf ${WORK_DIR}
