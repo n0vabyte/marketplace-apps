@@ -47,12 +47,6 @@ export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 function provision_failure {
-
-# dbg
-echo "KC_SERVER: ${KC_SERVER}"
-echo "KC_USERNAME: ${KC_USERNAME}"
-
-
 # dep
 apt install jq -y
 
@@ -62,10 +56,10 @@ local token=($(curl -ks -X POST ${KC_SERVER} \
      -d "{ \"username\":\"${KC_USERNAME}\", \"password\":\"${KC_PASSWORD}\" }" | jq -r .token) )
 
 # send pre-provision failure
-curl -k -X POST ${DATA_ENDPOINT} \
+curl -sk -X POST ${DATA_ENDPOINT} \
      -H "Authorization: ${token}" \
      -H "Content-Type: application/json" \
-     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"prefail\", \"branch\": \"${BRANCH}\", \
+     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${BRANCH}\", \
         \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
 }
 
