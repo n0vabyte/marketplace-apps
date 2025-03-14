@@ -3,6 +3,9 @@ set -e
 DEBUG="NO"
 if [ "${DEBUG}" == "NO" ]; then
   trap "cleanup $? $LINENO" EXIT
+fi
+
+if [ "${MODE}" == "staging" ]; then
   trap "provision_failure $? $LINENO" ERR
 fi
 
@@ -67,9 +70,6 @@ curl -sk -X POST ${DATA_ENDPOINT} \
 }
 
 function cleanup {
-  # send status
-  #provision_failure
-
   if [ -d "${WORK_DIR}" ]; then
     rm -rf ${WORK_DIR}
   fi
