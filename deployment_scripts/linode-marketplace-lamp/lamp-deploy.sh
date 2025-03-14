@@ -62,10 +62,10 @@ local token=($(curl -ks -X POST ${KC_SERVER} \
      -d "{ \"username\":\"${KC_USERNAME}\", \"password\":\"${KC_PASSWORD}\" }" | jq -r .token) )
 
 # send pre-provision failure
-curl -k -X POST ${KC_SERVER} \
+curl -k -X POST ${DATA_ENDPOINT} \
      -H "Authorization: ${token}" \
      -H "Content-Type: application/json" \
-     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"prefail\", "branch": \"${BRANCH}\", \
+     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"prefail\", \"branch\": \"${BRANCH}\", \
         \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
 }
 
