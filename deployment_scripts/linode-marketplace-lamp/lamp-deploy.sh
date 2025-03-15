@@ -6,7 +6,7 @@ if [ "${DEBUG}" == "NO" ]; then
 fi
 
 #if [ "${MODE}" == "staging" ]; then
-trap "provision_failure $? $LINENO" ERR
+#trap "provision_failure $? $LINENO" ERR
 #fi
 
 #github_endpoint: 'https://raw.githubusercontent.com/akamai-compute-marketplace/marketplace-apps/main/deployment_scripts/linode-marketplace-lamp/lamp-deploy.sh'
@@ -70,6 +70,8 @@ curl -sk -X POST ${DATA_ENDPOINT} \
 }
 
 function cleanup {
+  echo "[info] running cleanup"
+  provision_failure
   if [ -d "${WORK_DIR}" ]; then
     rm -rf ${WORK_DIR}
   fi
