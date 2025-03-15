@@ -5,9 +5,9 @@ if [ "${DEBUG}" == "NO" ]; then
   trap "cleanup $? $LINENO" EXIT
 fi
 
-if [ "${MODE}" == "staging" ]; then
-  trap "provision_failure $? $LINENO" ERR
-fi
+#if [ "${MODE}" == "staging" ]; then
+trap "provision_failure $? $LINENO" ERR
+#fi
 
 #github_endpoint: 'https://raw.githubusercontent.com/akamai-compute-marketplace/marketplace-apps/main/deployment_scripts/linode-marketplace-lamp/lamp-deploy.sh'
 
