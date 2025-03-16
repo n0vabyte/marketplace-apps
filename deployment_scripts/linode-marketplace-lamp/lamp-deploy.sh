@@ -1,13 +1,16 @@
 #!/bin/bash
-set -e
+
+# modes
 DEBUG="NO"
 if [ "${DEBUG}" == "NO" ]; then
   trap "cleanup $? $LINENO" EXIT
 fi
 
-#if [ "${MODE}" == "staging" ]; then
-#trap "provision_failure $? $LINENO" ERR
-#fi
+if [ "${MODE}" == "staging" ]; then
+  trap "provision_failure $? $LINENO" ERR
+else
+  set -e
+fi
 
 #github_endpoint: 'https://raw.githubusercontent.com/akamai-compute-marketplace/marketplace-apps/main/deployment_scripts/linode-marketplace-lamp/lamp-deploy.sh'
 
@@ -51,22 +54,24 @@ export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 function provision_failure {
-echo "[info] Provision failed. Sending status.."
+  echo "[info] Provision failed. Sending status.."
 
-# dep
-apt install jq -y
+  # dep
+  apt install jq -y
 
-# set token
-local token=($(curl -ks -X POST ${KC_SERVER} \
+  # set token
+  local token=($(curl -ks -X POST ${KC_SERVER} \
      -H "Content-Type: application/json" \
      -d "{ \"username\":\"${KC_USERNAME}\", \"password\":\"${KC_PASSWORD}\" }" | jq -r .token) )
 
-# send pre-provision failure
-curl -sk -X POST ${DATA_ENDPOINT} \
+  # send pre-provision failure
+  curl -sk -X POST ${DATA_ENDPOINT} \
      -H "Authorization: ${token}" \
      -H "Content-Type: application/json" \
      -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${BRANCH}\", \
         \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
+  
+  exit 1
 }
 
 function cleanup {
