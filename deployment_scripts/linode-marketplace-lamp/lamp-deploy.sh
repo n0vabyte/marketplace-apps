@@ -76,7 +76,6 @@ function provision_failure {
 
 function cleanup {
   echo "[info] running cleanup"
-  provision_failure
   if [ -d "${WORK_DIR}" ]; then
     rm -rf ${WORK_DIR}
   fi
