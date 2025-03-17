@@ -74,7 +74,7 @@ function provision_failure {
      -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${BRANCH}\", \
         \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
   
-  #exit $?
+  exit $?
 }
 
 function cleanup {
