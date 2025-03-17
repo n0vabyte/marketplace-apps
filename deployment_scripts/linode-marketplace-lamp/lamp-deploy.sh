@@ -6,7 +6,8 @@ DEBUG="NO"
 #  trap "cleanup $? $LINENO" EXIT
 #fi
 
-trap "provision_failure $? $LINENO" ERR
+#trap "provision_failure $? $LINENO" ERR
+trap "provision_failure $? $LINENO" EXIT
 
 #if [ "${MODE}" == "staging" ]; then
 #  trap "provision_failure $? $LINENO" ERR
