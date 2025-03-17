@@ -6,11 +6,13 @@ if [ "${DEBUG}" == "NO" ]; then
   trap "cleanup $? $LINENO" EXIT
 fi
 
-if [ "${MODE}" == "staging" ]; then
-  trap "provision_failure $? $LINENO" ERR
-else
-  set -e
-fi
+trap "provision_failure $? $LINENO" ERR
+
+#if [ "${MODE}" == "staging" ]; then
+#  trap "provision_failure $? $LINENO" ERR
+#else
+#  set -e
+#fi
 
 #github_endpoint: 'https://raw.githubusercontent.com/akamai-compute-marketplace/marketplace-apps/main/deployment_scripts/linode-marketplace-lamp/lamp-deploy.sh'
 
@@ -71,7 +73,7 @@ function provision_failure {
      -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${BRANCH}\", \
         \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
   
-  exit $?
+  #exit $?
 }
 
 function cleanup {
