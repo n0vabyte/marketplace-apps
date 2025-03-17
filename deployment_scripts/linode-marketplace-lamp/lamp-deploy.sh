@@ -7,7 +7,8 @@ DEBUG="NO"
 #fi
 
 #trap "provision_failure $? $LINENO" ERR
-trap "provision_failure $? $LINENO" EXIT
+#trap "provision_failure $? $LINENO" EXIT
+trap "[[ $? -eq 127 ]] && provision_failure $LINENO" ERR
 
 #if [ "${MODE}" == "staging" ]; then
 #  trap "provision_failure $? $LINENO" ERR
