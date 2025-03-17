@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # modes
 DEBUG="NO"
@@ -71,7 +71,6 @@ function provision_failure {
      -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${BRANCH}\", \
         \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
   
-  exit 1
 }
 
 function cleanup {
