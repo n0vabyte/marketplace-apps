@@ -156,6 +156,6 @@ function installation_complete {
 }
 # main
 run && installation_complete
-if [ "${DEBUG}" == "NO" ]; then
-  cleanup
-fi
+#if [ "${DEBUG}" == "NO" ]; then
+#  cleanup
+#fi
