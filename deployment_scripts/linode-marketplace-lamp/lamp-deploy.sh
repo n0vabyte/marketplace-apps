@@ -8,11 +8,8 @@ if [ "${DEBUG}" == "NO" ]; then
   trap "cleanup $? $LINENO" EXIT
 fi
 
-#trap "provision_failure $? $LINENO" ERR
-#trap "provision_failure $? $LINENO" EXIT
-
 if [ "${MODE}" == "staging" ]; then
-  trap "provision_failure $? $LINENO" ERR
+  trap "provision_failed $? $LINENO" ERR
 else
   set -e
 fi
@@ -58,7 +55,7 @@ export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 # enable logging
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
-function provision_failure {
+function provision_failed {
   echo "[info] Provision failed. Sending status.."
 
   # dep
