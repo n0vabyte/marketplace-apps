@@ -4,18 +4,18 @@ set -o errtrace
 
 # modes
 DEBUG="NO"
-#if [ "${DEBUG}" == "NO" ]; then
-#  trap "cleanup $? $LINENO" EXIT
-#fi
+if [ "${DEBUG}" == "NO" ]; then
+  trap "cleanup $? $LINENO" EXIT
+fi
 
-trap "provision_failure $? $LINENO" ERR
+#trap "provision_failure $? $LINENO" ERR
 #trap "provision_failure $? $LINENO" EXIT
 
-#if [ "${MODE}" == "staging" ]; then
-#  trap "provision_failure $? $LINENO" ERR
-#else
-#  set -e
-#fi
+if [ "${MODE}" == "staging" ]; then
+  trap "provision_failure $? $LINENO" ERR
+else
+  set -e
+fi
 
 #github_endpoint: 'https://raw.githubusercontent.com/akamai-compute-marketplace/marketplace-apps/main/deployment_scripts/linode-marketplace-lamp/lamp-deploy.sh'
 
@@ -158,7 +158,9 @@ function installation_complete {
   echo "Installation Complete"
 }
 # main
-run && installation_complete
-#if [ "${DEBUG}" == "NO" ]; then
-#  cleanup
-#fi
+run
+installation_complete
+
+if [ "${DEBUG}" == "NO" ]; then
+  cleanup
+fi
