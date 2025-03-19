@@ -48,4 +48,5 @@
     lock_timeout: 5
 
 - name: installing let's encrypt certificate
-  shell: echo {{ soa_email_address }} | /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
+  command: 
+    cmd: /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh {{ soa_email_address }}
