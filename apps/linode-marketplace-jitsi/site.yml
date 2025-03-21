@@ -1,19 +1,5 @@
 # linode ansible playbook
 
-#- name: jitsi setup
-#  hosts: localhost
-#  connection: local
-#  gather_facts: true
-#  any_errors_fatal: true
-#  user: root
-#  vars_files:
-#    - group_vars/linode/vars
-#  roles:
-#    - common
-#    - jitsi
-#    - post
-
-
 - name: jitsi setup
   hosts: localhost
   connection: local
@@ -22,31 +8,44 @@
   user: root
   vars_files:
     - group_vars/linode/vars
+  roles:
+    - common
+    - jitsi
+    - post
 
-  tasks:
-    - block:
-        - name: run roles
-          include_role:
-            name: "{{ item }}"
-          loop:
-            - common
-            - jitsi
-            - post
-        - name: deployment passed
-          import_tasks: ../linode_helpers/roles/cilog/tasks/main.yml
-          vars:
-            deploy_status: 'successful'
-      rescue:
-        - name: deployment failed
-          import_tasks: ../linode_helpers/roles/cilog/tasks/main.yml
-          vars:
-            deploy_status: 'failed'
-      when: "mode == 'staging'"
-
-    - name: running app normally
-      include_role:
-        name: "{{ item }}"
-      loop:
-        - common
-        - jitsi
-        - post
+#- name: jitsi setup
+#  hosts: localhost
+#  connection: local
+#  gather_facts: true
+#  any_errors_fatal: true
+#  user: root
+#  vars_files:
+#    - group_vars/linode/vars
+#
+#  tasks:
+#    - block:
+#        - name: run roles
+#          include_role:
+#            name: "{{ item }}"
+#          loop:
+#            - common
+#            - jitsi
+#            - post
+#        - name: deployment passed
+#          import_tasks: ../linode_helpers/roles/cilog/tasks/main.yml
+#          vars:
+#            deploy_status: 'successful'
+#      rescue:
+#        - name: deployment failed
+#          import_tasks: ../linode_helpers/roles/cilog/tasks/main.yml
+#          vars:
+#            deploy_status: 'failed'
+#      when: "mode == 'staging'"
+#
+#    - name: running app normally
+#      include_role:
+#        name: "{{ item }}"
+#      loop:
+#        - common
+#        - jitsi
+#        - post
