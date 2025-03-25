@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# enable logging
+exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
+
 # modes
 DEBUG="NO"
 if [ "${DEBUG}" == "NO" ]; then
@@ -28,7 +31,7 @@ fi
 #export GH_USER=""
 #export BRANCH=""
 
-GIT_BRANCH="${BRANCH}"
+export GIT_BRANCH="${BRANCH}"
 # git user and branch
 if [[ -n ${GH_USER} && -n ${GIT_BRANCH} ]]; then
         echo "[info] git user and branch set.."
@@ -50,7 +53,7 @@ export WORK_DIR="/tmp/marketplace-apps"
 export MARKETPLACE_APP="apps/linode-marketplace-jitsi"
 
 # enable logging
-exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
+#exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 function provision_failed {
   echo "[info] Provision failed. Sending status.."
