@@ -42,7 +42,7 @@ else
 fi
 
 # git repo
-if [ "${GH_USER}" != "akamai-compute-marketplace" ] && [ -n "${BRANCH}" ]; then
+if [ "${GH_USER}" != "akamai-compute-marketplace" ] && [ -n "${GIT_BRANCH}" ]; then
   export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
 else
   export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
