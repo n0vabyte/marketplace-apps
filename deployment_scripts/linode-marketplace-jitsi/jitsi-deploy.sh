@@ -28,13 +28,14 @@ fi
 #export GH_USER=""
 #export BRANCH=""
 
+GIT_BRANCH="${BRANCH}"
 # git user and branch
-if [[ -n ${GH_USER} && -n ${BRANCH} ]]; then
+if [[ -n ${GH_USER} && -n ${GIT_BRANCH} ]]; then
         echo "[info] git user and branch set.."
 
 else
         export GH_USER="akamai-compute-marketplace"
-        export BRANCH="main"
+        export GIT_BRANCH="main"
 fi
 
 # git repo
@@ -42,7 +43,7 @@ if [ "${GH_USER}" != "akamai-compute-marketplace" ] && [ -n "${BRANCH}" ]; then
   export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
 else
   export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
-  export BRANCH="${BRANCH}"
+  export GIT_BRANCH="${BRANCH}"
 fi
 
 export WORK_DIR="/tmp/marketplace-apps"
@@ -133,7 +134,7 @@ function run {
   apt-get install -y git python3 python3-pip
 
   # clone repo and set up ansible environment
-  git -C /tmp clone -b ${BRANCH} ${GIT_REPO}
+  git -C /tmp clone -b ${GIT_BRANCH} ${GIT_REPO}
   # for a single testing branch
   #git -C /tmp clone -b ${BRANCH} ${GIT_REPO}
 
