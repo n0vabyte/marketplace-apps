@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # enable logging
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
@@ -32,6 +32,8 @@ fi
 #BRANCH=""
 
 export GIT_BRANCH="${BRANCH}"
+unset BRANCH
+
 # git user and branch
 if [[ -n ${GH_USER} && -n ${GIT_BRANCH} ]]; then
         echo "[info] git user and branch set.."
@@ -64,7 +66,7 @@ function provision_failed {
   curl -sk -X POST ${DATA_ENDPOINT} \
      -H "Authorization: ${token}" \
      -H "Content-Type: application/json" \
-     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${BRANCH}\", \
+     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${GIT_BRANCH}\", \
         \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
   
   exit $?
