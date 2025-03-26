@@ -28,25 +28,19 @@ fi
 #<UDF name="soa_email_address" label="Admin Email for Let's Encrypt SSL certificate">
 
 # repo
-#export GH_USER=""
-#export BRANCH=""
+#GH_USER=""
+#BRANCH=""
 
 export GIT_BRANCH="${BRANCH}"
 # git user and branch
 if [[ -n ${GH_USER} && -n ${GIT_BRANCH} ]]; then
         echo "[info] git user and branch set.."
+        export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
 
 else
         export GH_USER="akamai-compute-marketplace"
         export GIT_BRANCH="main"
-fi
-
-# git repo
-if [ "${GH_USER}" != "akamai-compute-marketplace" ] && [ -n "${GIT_BRANCH}" ]; then
-  export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
-else
-  export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
-  export GIT_BRANCH="${BRANCH}"
+        export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
 fi
 
 export WORK_DIR="/tmp/marketplace-apps"

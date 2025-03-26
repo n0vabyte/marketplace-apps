@@ -1,6 +1,7 @@
-#!/bin/bash -x
+#!/bin/bash
 
-set -o errtrace
+# enable logging
+exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 # modes
 DEBUG="NO"
@@ -29,31 +30,25 @@ fi
 #<UDF name="domain" label="Domain" example="The domain for the DNS record: example.com (Requires API token)" default="">
 
 # repo
-#export GH_USER=""
-#export BRANCH=""
+#GH_USER=""
+#BRANCH=""
 
 # git user and branch
 if [[ -n ${GH_USER} && -n ${BRANCH} ]]; then
         echo "[info] git user and branch set.."
+        export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
 
 else
         export GH_USER="akamai-compute-marketplace"
         export BRANCH="main"
-fi
-
-# git repo
-if [ "${GH_USER}" != "akamai-compute-marketplace" ] && [ -n "${BRANCH}" ]; then
-  export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
-else
-  export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
-  export BRANCH="${BRANCH}"
+        export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
 fi
 
 export WORK_DIR="/tmp/marketplace-apps"
 export MARKETPLACE_APP="apps/linode-marketplace-lamp"
 
 # enable logging
-exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
+#exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 function provision_failed {
   echo "[info] Provision failed. Sending status.."
