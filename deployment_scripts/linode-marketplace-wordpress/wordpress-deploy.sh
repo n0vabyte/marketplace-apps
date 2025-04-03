@@ -1,6 +1,19 @@
 #!/bin/bash
-set -e
-trap "cleanup $? $LINENO" EXIT
+
+# enable logging
+exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
+
+# modes
+DEBUG="NO"
+if [ "${DEBUG}" == "NO" ]; then
+  trap "cleanup $? $LINENO" EXIT
+fi
+
+if [ "${MODE}" == "staging" ]; then
+  trap "provision_failed $? $LINENO" ERR
+else
+  set -e
+fi
 
 ## Wordpress Settings
 #<UDF name="soa_email_address" label="Email address (for the Let's Encrypt SSL certificate)" example="user@domain.tld">
@@ -23,13 +36,41 @@ trap "cleanup $? $LINENO" EXIT
 ## Misc
 #<UDF name="prometheus_exporter" label="Add Prometheus data exporter" manyOf="node_exporter,mysqld_exporter,none"  default="">
 
-# git repo
-export GIT_REPO="https://github.com/akamai-compute-marketplace/marketplace-apps.git"
-export WORK_DIR="/tmp/marketplace-apps"
-export MARKETPLACE_APP="apps/linode-marketplace-wordpress"
+# repo
+#GH_USER=""
+#BRANCH=""
 
-# enable logging
-exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
+# git user and branch
+if [[ -n ${GH_USER} && -n ${BRANCH} ]]; then
+        echo "[info] git user and branch set.."
+        export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
+
+else
+        export GH_USER="akamai-compute-marketplace"
+        export BRANCH="main"
+        export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
+fi
+
+function provision_failed {
+  echo "[info] Provision failed. Sending status.."
+
+  # dep
+  apt install jq -y
+
+  # set token
+  local token=($(curl -ks -X POST ${KC_SERVER} \
+     -H "Content-Type: application/json" \
+     -d "{ \"username\":\"${KC_USERNAME}\", \"password\":\"${KC_PASSWORD}\" }" | jq -r .token) )
+
+  # send pre-provision failure
+  curl -sk -X POST ${DATA_ENDPOINT} \
+     -H "Authorization: ${token}" \
+     -H "Content-Type: application/json" \
+     -d "{ \"app_label\":\"${APP_LABEL}\", \"status\":\"provision_failed\", \"branch\": \"${BRANCH}\", \
+        \"gituser\": \"${GH_USER}\", \"runjob\": \"${RUNJOB}\", \"image\":\"${IMAGE}\" }"
+  
+  exit $?
+}
 
 function cleanup {
   if [ -d "${WORK_DIR}" ]; then
@@ -75,6 +116,15 @@ EOF
     echo "subdomain: ${SUBDOMAIN}" >> ${group_vars};
   else echo "subdomain: www" >> ${group_vars};
   fi
+
+  # staging or production mode (ci)
+  if [[ "${MODE}" == "staging" ]]; then
+    echo "[info] running in staging mode..."
+    echo "mode: ${MODE}" >> ${group_vars}
+  else
+    echo "[info] running in production mode..."
+    echo "mode: production" >> ${group_vars}
+  fi  
 }
 
 function run {
@@ -83,9 +133,9 @@ function run {
   apt-get install -y git python3 python3-pip
 
   # clone repo and set up ansible environment
-  git -C /tmp clone ${GIT_REPO}
+  #git -C /tmp clone ${GIT_REPO}
   # for a single testing branch
-  # git -C /tmp clone -b ${BRANCH} ${GIT_REPO}
+  git -C /tmp clone -b ${BRANCH} ${GIT_REPO}
 
   # venv
   cd ${WORK_DIR}/${MARKETPLACE_APP}
@@ -106,5 +156,6 @@ function installation_complete {
   echo "Installation Complete"
 }
 # main
-run && installation_complete
+run
+installation_complete
 cleanup
