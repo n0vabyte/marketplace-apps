@@ -12,6 +12,8 @@
     gituser: "{{ lookup('env', 'GH_USER') }}"
     runjob: "{{ lookup('env', 'RUNJOB') }}"
     image: "{{ lookup('env', 'IMAGE') }}"
+    type: "{{ lookup('env', 'TYPE') }}"
+    region: "{{ lookup('env', 'REGION') }}"
     
 - name: obtain temp token from auth server
   uri:
@@ -44,6 +46,8 @@
       gituser: '{{ gituser }}'
       runjob: '{{ runjob }}'
       image: '{{ image }}'
+      type: '{{ type }}'
+      region: '{{ region }}'
     headers:
       Content-Type: 'application/json'
       Authorization: "{{ auth_token.json.token }}"
