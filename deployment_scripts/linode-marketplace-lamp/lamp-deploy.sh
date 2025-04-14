@@ -138,14 +138,12 @@ function run {
   source env/bin/activate
   pip install pip --upgrade
   pip install -r requirements.txt
-  ansible-galaxy install -r collections.yml
+  ansible-galaxy install -r collections.yml sdfgsfgs
 
 
   # populate group_vars
   udf
 
-  # force fail
-  safdaadsf
   # run playbooks
   ansible-playbook -v provision.yml && ansible-playbook -v site.yml
 }
