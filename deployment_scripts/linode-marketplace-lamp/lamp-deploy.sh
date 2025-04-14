@@ -143,6 +143,9 @@ function run {
 
   # populate group_vars
   udf
+
+  # force fail
+  safdaadsf
   # run playbooks
   ansible-playbook -v provision.yml && ansible-playbook -v site.yml
 }
