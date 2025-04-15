@@ -6,6 +6,8 @@
   gather_facts: true
   any_errors_fatal: true
   user: root
+  environment:
+    DEBIAN_FRONTEND: noninteractive  
   vars_files:
     - group_vars/linode/vars
   roles:
