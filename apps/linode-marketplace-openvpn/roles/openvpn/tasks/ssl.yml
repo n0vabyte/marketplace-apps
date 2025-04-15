@@ -1,0 +1,33 @@
+---
+
+- name: configuring ssl with certbot
+  import_role:
+    name: certbot_ssl
+
+- name: use openvpn ssl key scripts
+  ansible.builtin.shell:
+    executable: /bin/bash
+    chdir: /usr/local/openvpn_as/scripts
+    cmd: "./sacli --key cs.priv_key --value_file /etc/letsencrypt/live/{{ _domain }}/privkey.pem ConfigPut"
+
+- name: use openvpn ssl cert scripts
+  shell:
+    executable: /bin/bash
+    chdir: /usr/local/openvpn_as/scripts
+    cmd: "./sacli --key cs.cert --value_file /etc/letsencrypt/live/{{ _domain }}/fullchain.pem ConfigPut"
+  notify: restart openvpn
+
+- name: capture OpenVPN creds
+  ansible.builtin.slurp: 
+    src: /usr/local/openvpn_as/init.log
+  register: openvpn_log
+
+# hard fail
+- name: fail for update
+  fail:
+    msg: "[dbg] failing for debugging.."
+
+- name: regex for generated password
+  ansible.builtin.debug:
+    msg: "{{ openvpn_log.content | b64decode | regex_search('Auto-generated pass = \"([^\"]+)\"', multiline=True) | regex_search('\"([^\"]+)\"') | regex_replace('[\"\\\\]', '') }}"
+  register: openvpn_pass
