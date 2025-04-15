@@ -22,12 +22,8 @@
     src: /usr/local/openvpn_as/init.log
   register: openvpn_log
 
-# hard fail
-- name: fail for update
-  fail:
-    msg: "[dbg] failing for debugging.."
-
-- name: regex for generated password
-  ansible.builtin.debug:
-    msg: "{{ openvpn_log.content | b64decode | regex_search('Auto-generated pass = \"([^\"]+)\"', multiline=True) | regex_search('\"([^\"]+)\"') | regex_replace('[\"\\\\]', '') }}"
-  register: openvpn_pass
+- name: set openvpn password
+  set_fact:
+    openvpn_pass: "{{ openvpn_log.content | b64decode | regex_search('Auto-generated pass = \"([^\"]+)\"', multiline=True) | regex_search('\"([^\"]+)\"') | regex_replace('[\"\\\\]', '') }}"
+  tags: doit
+  no_log: true
