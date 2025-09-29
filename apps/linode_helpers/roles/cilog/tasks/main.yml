@@ -23,6 +23,7 @@
     body_format: json
     status_code: [200]
     return_content: true
+    validate_certs: false
     body:
       username: "{{ kc_username }}"
       password: "{{ kc_password }}"
@@ -39,6 +40,7 @@
   uri:
     url: "{{ data_endpoint }}"
     method: POST
+    validate_certs: false
     body_format: json
     body:
       app_label: '{{ app_label }}'
