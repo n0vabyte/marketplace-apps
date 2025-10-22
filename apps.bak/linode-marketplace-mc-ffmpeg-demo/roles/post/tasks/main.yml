@@ -1,0 +1,26 @@
+---
+  - name: Remove archive file
+    file:
+      path: "/tmp/FFmpeg_Plugins_Demo_Unencrypted.zip"
+      state: absent
+
+  - name: Create symlink for ffmpeg
+    file:
+      src: "/opt/mainconcept/ffmpeg-omx/bin/ffmpeg"
+      dest: "/bin/ffmpeg"
+      state: link
+
+  - name: copy MOTD template to /etc/motd
+    template:
+      src: templates/motd.j2
+      dest: /etc/motd
+
+  - name: writing creds into file
+    copy:
+      dest: '/home/{{ username }}/.credentials'
+      owner: '{{ username }}'
+      group: '{{ username }}'
+      mode: '0600'
+      content: |
+        Sudo Username: {{ username }}
+        Sudo Password: {{ password }}

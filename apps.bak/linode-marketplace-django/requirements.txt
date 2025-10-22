@@ -1,0 +1,17 @@
+ansible==10.5.0
+PyMySQL==1.1.2
+yamllint==1.37.1
+ansible-lint==25.8.2
+flake8==7.3.0
+linode_api4==5.35.0
+dnspython==2.8.0
+polling==0.3.2
+ansible-specdoc==0.0.19
+pyyaml==6.0.2
+docker==7.1.0
+passlib==1.7.4
+
+#for django
+psycopg2-binary==2.9.10
+# django==5.2.6
+# gunicorn==23.0.0

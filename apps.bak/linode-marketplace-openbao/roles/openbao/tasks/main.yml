@@ -1,0 +1,10 @@
+---
+
+- name: Import Install Task
+  include_tasks: install.yml
+
+- name: Import SSL Task
+  include_tasks: ssl.yml
+
+- name: Import Config Task
+  include_tasks: config.yml

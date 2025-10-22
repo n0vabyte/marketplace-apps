@@ -19,6 +19,7 @@
     name: create_dns_record
   when: 
     - token_password is defined
+    - token_password | length > 0
     - default_dns is not defined
 
 # adding MX & SPF
