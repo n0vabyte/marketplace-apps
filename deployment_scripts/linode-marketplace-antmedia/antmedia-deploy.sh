@@ -150,4 +150,5 @@ function installation_complete {
 }
 # main
 run
+echo "debug: RC $?"
 installation_complete
