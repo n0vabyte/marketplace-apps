@@ -96,7 +96,8 @@
 - name: Generate GPG key non-interactively
   command: gpg --batch --generate-key /tmp/gpg_key_gen_batch
   environment:
-    GNUPGHOME: /root/.gnupg
+    #GNUPGHOME: /root/.gnupg
+    GNUPGHOME: /var/www/.gnupg
 
 - name: Run gpg --list-secret-keys and save output to a temp file
   shell: gpg --list-secret-keys > /tmp/secret-keys.txt
@@ -136,7 +137,7 @@
   args:
     executable: /bin/bash
 
-- name: Install Passbolt without admin user
+- name: Install Passbolt as webuser
   become: true
   become_method: sudo
   become_user: "{{ webuser }}"
