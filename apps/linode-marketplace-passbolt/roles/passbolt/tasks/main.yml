@@ -5,10 +5,7 @@
   get_url:
     url: "https://download.passbolt.com/ce/installer/passbolt-repo-setup.ce.sh"
     dest: "/tmp/passbolt-repo-setup.ce.sh"
-    mode: "0755"
-
-- name: Execute the passbolt setup script
-  ansible.builtin.shell: bash /tmp/passbolt-repo-setup.ce.sh
+    mode: 0755
 
 - name: Run passbolt-repo-setup.ce.sh script
   command: "/tmp/passbolt-repo-setup.ce.sh"
