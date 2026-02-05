@@ -8,7 +8,8 @@
     mode: 0755
 
 - name: Run passbolt-repo-setup.ce.sh script
-  command: "/tmp/passbolt-repo-setup.ce.sh"
+  shell: 
+    cmd: "/tmp/passbolt-repo-setup.ce.sh"
 
 - name: Configure Passbolt MySQL settings
   ansible.builtin.debconf:
