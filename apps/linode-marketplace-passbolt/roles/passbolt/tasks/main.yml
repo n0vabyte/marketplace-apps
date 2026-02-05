@@ -7,6 +7,10 @@
     dest: "/tmp/passbolt-repo-setup.ce.sh"
     mode: 0755
 
+- name: Force fail
+  fail:
+    msg: "fail..."
+
 - name: Run passbolt-repo-setup.ce.sh script
   shell: 
     cmd: "/tmp/passbolt-repo-setup.ce.sh"
