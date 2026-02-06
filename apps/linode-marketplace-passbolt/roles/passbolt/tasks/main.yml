@@ -16,7 +16,6 @@
   args:
     executable: /bin/bash
   environment:
-    DEBIAN_FRONTEND: noninteractive
     TERM: xterm-256color
 
 - name: Configure Passbolt MySQL settings
@@ -105,8 +104,8 @@
 - name: Generate GPG key non-interactively
   command: gpg --batch --generate-key /tmp/gpg_key_gen_batch
   environment:
-    #GNUPGHOME: /root/.gnupg
-    GNUPGHOME: /var/www/.gnupg
+    GNUPGHOME: /root/.gnupg
+    #GNUPGHOME: /var/www/.gnupg
 
 - name: Run gpg --list-secret-keys and save output to a temp file
   shell: gpg --list-secret-keys > /tmp/secret-keys.txt
