@@ -15,7 +15,7 @@
   shell: /tmp/passbolt-repo-setup.ce.sh
   args:
     executable: /bin/bash
-  env:
+  environment:
     DEBIAN_FRONTEND: noninteractive
 
 - name: Configure Passbolt MySQL settings
