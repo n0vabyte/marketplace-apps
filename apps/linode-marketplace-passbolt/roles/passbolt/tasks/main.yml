@@ -14,7 +14,9 @@
 - name: Run passbolt-repo-setup.ce.sh script
   shell: /tmp/passbolt-repo-setup.ce.sh
   args:
-    executable: /bin/bash  
+    executable: /bin/bash
+  env:
+    DEBIAN_FRONTEND: noninteractive
 
 - name: Configure Passbolt MySQL settings
   ansible.builtin.debconf:

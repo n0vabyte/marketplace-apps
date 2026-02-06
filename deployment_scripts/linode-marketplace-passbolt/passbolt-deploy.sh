@@ -161,6 +161,7 @@ EOF
 
 function run {
   # install dependancies
+  #export DEBIAN_FRONTEND=noninteractive
   apt-get update
   apt-get install -y git python3 python3-pip
 
