@@ -7,13 +7,14 @@
     dest: "/tmp/passbolt-repo-setup.ce.sh"
     mode: 0755
 
-- name: Force fail
-  fail:
-    msg: "fail..."
+#- name: Force fail
+#  fail:
+#    msg: "fail..."
 
 - name: Run passbolt-repo-setup.ce.sh script
-  shell: 
-    cmd: "/tmp/passbolt-repo-setup.ce.sh"
+  shell: /tmp/passbolt-repo-setup.ce.sh
+  args:
+    executable: /bin/bash  
 
 - name: Configure Passbolt MySQL settings
   ansible.builtin.debconf:
