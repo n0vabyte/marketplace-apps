@@ -12,6 +12,12 @@ if [[ -n ${DEBUG} ]]; then
 else
   trap "cleanup $? $LINENO" EXIT
 fi
+
+if [ "${MODE}" == "staging" ]; then
+  trap "provision_failed $? $LINENO" ERR
+else
+  set -e
+fi
 # END CI-MODE
 
 ## Linode/SSH security settings
