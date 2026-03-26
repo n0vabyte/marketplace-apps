@@ -12,7 +12,7 @@
   args:
     executable: /bin/bash
   environment:
-    DEBIAN_FRONTEND: noninteractive 
+    DEBIAN_FRONTEND: noninteractive
 
 - name: Obtain credentials
   command: bt 14
