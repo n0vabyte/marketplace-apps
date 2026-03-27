@@ -8,9 +8,6 @@
 
 # dbg
 
-- name: Show procs
-  command: ps aux | grep LINODE_DOMAIN
-
 - name: Update pkgs before install
   apt:
     upgrade: full
