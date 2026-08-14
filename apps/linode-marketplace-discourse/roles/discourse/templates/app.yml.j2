@@ -1,0 +1,61 @@
+## Managed by Ansible — do not edit by hand, changes will be overwritten.
+## SSL/TLS is handled inside the container (web.ssl + web.letsencrypt templates) rather than by a
+## host nginx + certbot_ssl (architecture_decisions.md D4): the container binds 80/443 directly and
+## issues its own Let's Encrypt certificate via acme.sh on first start.
+templates:
+  - "templates/postgres.template.yml"
+  - "templates/redis.template.yml"
+  - "templates/web.template.yml"
+  - "templates/web.ratelimited.template.yml"
+  - "templates/web.ssl.template.yml"
+  - "templates/web.letsencrypt.ssl.template.yml"
+
+expose:
+  - "80:80"
+  - "443:443"
+
+params:
+  db_default_text_search_config: "pg_catalog.english"
+  db_shared_buffers: "{{ discourse_db_shared_buffers }}"
+  version: "{{ discourse_version }}"
+
+env:
+  LC_ALL: en_US.UTF-8
+  LANG: en_US.UTF-8
+  LANGUAGE: en_US.UTF-8
+  UNICORN_WORKERS: "{{ discourse_unicorn_workers }}"
+
+  DISCOURSE_HOSTNAME: "{{ _domain }}"
+  DISCOURSE_DEVELOPER_EMAILS: "{{ admin_email }}"
+  DISCOURSE_DB_PASSWORD: "{{ discourse_db_password }}"
+{% if smtp_address is defined and smtp_address | length > 0 %}
+  DISCOURSE_SMTP_ADDRESS: "{{ smtp_address }}"
+  DISCOURSE_SMTP_PORT: "{{ smtp_port | default(587) }}"
+  DISCOURSE_SMTP_USER_NAME: "{{ smtp_user_name | default('') }}"
+  DISCOURSE_SMTP_PASSWORD: "{{ smtp_password | default('') }}"
+{% else %}
+  ## No SMTP UDFs were set at deploy time — skip Discourse's own SMTP-reachability boot check.
+  ## Password-reset/notification/digest email will not send until SMTP is configured (see
+  ## /home/{{ username }}/.credentials). Configure under Admin > Settings > Email and remove this
+  ## line, or redeploy with the SMTP UDFs set.
+  DISCOURSE_SKIP_EMAIL_SETUP: "1"
+{% endif %}
+
+volumes:
+  - volume:
+      host: "{{ discourse_docker_dir }}/shared/standalone"
+      guest: /shared
+  - volume:
+      host: "{{ discourse_docker_dir }}/shared/standalone/log/var-log"
+      guest: /var/log
+
+hooks:
+  after_code:
+    - exec:
+        cd: $home/plugins
+        cmd:
+          - git clone https://github.com/discourse/docker_manager.git
+
+run:
+  - exec: echo "Beginning of custom commands"
+  - exec: echo "End of custom commands"

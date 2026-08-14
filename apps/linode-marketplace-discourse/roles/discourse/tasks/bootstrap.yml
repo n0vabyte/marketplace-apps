@@ -1,0 +1,40 @@
+---
+- name: Check whether the discourse app image has already been bootstrapped
+  community.docker.docker_image_info:
+    name: local_discourse/app:latest
+  register: discourse_image_info
+
+# Bootstrap builds the full app image (bundle install, asset precompile, etc.) — measured at
+# ~7m24s on a g6-standard-2 (manual_install.md §4); padded generously here for slower regions/
+# cold image-pull caches.
+- name: Bootstrap discourse (slow, first run only)
+  command: ./launcher bootstrap app
+  args:
+    chdir: "{{ discourse_docker_dir }}"
+  async: 1800
+  poll: 30
+  when: discourse_image_info.images | length == 0
+
+- name: Install discourse systemd unit
+  template:
+    src: discourse.service.j2
+    dest: /etc/systemd/system/discourse.service
+    mode: '0644'
+  notify: Reload systemd
+
+- name: Enable and start discourse service
+  systemd_service:
+    name: discourse
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Wait for Discourse to answer over HTTPS (includes first-run Let's Encrypt issuance)
+  uri:
+    url: "https://{{ _domain }}/"
+    validate_certs: true
+    status_code: [200, 301, 302]
+  register: discourse_up
+  until: discourse_up.status is defined
+  retries: 30
+  delay: 20

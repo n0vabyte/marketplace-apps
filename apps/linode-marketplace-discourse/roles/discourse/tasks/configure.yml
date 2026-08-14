@@ -1,0 +1,26 @@
+---
+# Discourse's interactive setup wizard (bypassed here — architecture_decisions.md D2/D12) is the
+# only place that scales db_shared_buffers / UNICORN_WORKERS to the box's RAM/CPU. We replicate
+# its formula (image/setup_wizard/lib/discourse_setup/resource_scaler.rb @ discourse_docker) here
+# so the container isn't left running on the conservative hardcoded template defaults
+# (256MB / 3 workers) on boxes with more resources — verified empirically in manual_install.md §7.
+- name: Set memory/cpu facts for resource scaling
+  set_fact:
+    discourse_memory_gb: "{{ (ansible_memtotal_mb / 1024) | round(0, 'floor') | int }}"
+    discourse_cpu_cores: "{{ ansible_processor_vcpus }}"
+
+- name: Compute db_shared_buffers and UNICORN_WORKERS
+  set_fact:
+    discourse_db_shared_buffers: >-
+      {{ '128MB' if discourse_memory_gb | int <= 1
+         else ('256MB' if discourse_memory_gb | int == 2
+         else (([discourse_memory_gb | int * 256, 4096] | min) ~ 'MB')) }}
+    discourse_unicorn_workers: >-
+      {{ [[ (discourse_memory_gb | int * 2 if discourse_memory_gb | int <= 2
+             else discourse_cpu_cores | int * 2), 1] | max, 8] | min }}
+
+- name: Template containers/app.yml
+  template:
+    src: app.yml.j2
+    dest: "{{ discourse_docker_dir }}/containers/app.yml"
+    mode: '0600'

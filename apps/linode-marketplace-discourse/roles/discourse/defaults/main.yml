@@ -1,0 +1,9 @@
+---
+discourse_docker_repo: https://github.com/discourse/discourse_docker.git
+discourse_docker_dir: /var/discourse
+# Pinned for reproducibility (discourse_docker ships no tags, see architecture_decisions.md D9) —
+# re-validate periodically against upstream main.
+discourse_docker_ref: 9c35fe8f6f4eb66d399f756e3bae773292e34db2
+# Pinned Discourse application release (architecture_decisions.md D9) — check
+# github.com/discourse/discourse/tags for the current point release before bumping.
+discourse_version: v2026.7.1

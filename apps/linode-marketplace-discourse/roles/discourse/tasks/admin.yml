@@ -1,0 +1,25 @@
+---
+# The interactive discourse-setup wizard (bypassed — D2/D12) is the only place that creates an
+# admin account and turns local (password) logins on. Both are replicated here as a rails-runner
+# script rather than the `admin:create` rake task, which still prompts via `highline` even with
+# RANDOM_PASSWORD=1 and cannot be driven non-interactively (manual_install.md §8).
+- name: Render admin-seed script into the shared volume (visible in-container at /shared)
+  template:
+    src: seed_admin.rb.j2
+    dest: "{{ discourse_docker_dir }}/shared/standalone/seed_admin.rb"
+    mode: '0600'
+
+- name: Seed admin account and enable local logins (idempotent — finds-or-creates, re-asserts state)
+  community.docker.docker_container_exec:
+    container: app
+    command: bin/rails runner /shared/seed_admin.rb
+  register: discourse_admin_seed
+  until: discourse_admin_seed.rc == 0
+  retries: 15
+  delay: 15
+  changed_when: "'admin=true' in discourse_admin_seed.stdout"
+
+- name: Remove admin-seed script (contains the generated admin password)
+  file:
+    path: "{{ discourse_docker_dir }}/shared/standalone/seed_admin.rb"
+    state: absent

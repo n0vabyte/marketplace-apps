@@ -1,0 +1,26 @@
+email = "{{ admin_email }}"
+password = "{{ discourse_admin_password }}"
+
+user = User.find_by_email(email)
+if user.nil?
+  user = User.new(email: email)
+  user.username = UserNameSuggester.suggest(user.email)
+end
+user.active = true
+user.save!
+user.grant_admin!
+user.change_trust_level!(1) if user.trust_level < 1
+user.email_tokens.update_all(confirmed: true)
+user.activate
+
+# Off by default when the interactive wizard is bypassed (manual_install.md §8 Finding A).
+SiteSetting.enable_local_logins = true
+
+# Must be a second save on the reloaded, already-persisted user — setting the password in the
+# same save that creates the user does not persist the UserPassword row (manual_install.md §8
+# Finding B).
+user.reload
+user.password = password
+user.save!
+
+puts "admin=#{user.admin?} active=#{user.active} local_logins=#{SiteSetting.enable_local_logins}"

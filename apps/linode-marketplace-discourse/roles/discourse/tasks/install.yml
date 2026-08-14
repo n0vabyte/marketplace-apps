@@ -1,0 +1,22 @@
+---
+- name: Install docker
+  import_role:
+    name: docker
+
+- name: Install git
+  apt:
+    name: git
+    state: present
+    update_cache: true
+
+- name: Check whether discourse_docker is already cloned
+  stat:
+    path: "{{ discourse_docker_dir }}/.git"
+  register: discourse_docker_git
+
+- name: Clone discourse_docker at the pinned revision
+  ansible.builtin.git:
+    repo: "{{ discourse_docker_repo }}"
+    dest: "{{ discourse_docker_dir }}"
+    version: "{{ discourse_docker_ref }}"
+  when: not discourse_docker_git.stat.exists

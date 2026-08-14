@@ -1,0 +1,12 @@
+---
+- name: Install and clone discourse_docker
+  import_tasks: install.yml
+
+- name: Compute resource-scaling params and template containers/app.yml
+  import_tasks: configure.yml
+
+- name: Bootstrap and start Discourse
+  import_tasks: bootstrap.yml
+
+- name: Seed admin account
+  import_tasks: admin.yml
