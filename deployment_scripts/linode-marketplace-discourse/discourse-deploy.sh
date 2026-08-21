@@ -1,11 +1,24 @@
 #!/bin/bash
-# Discourse Marketplace App deploy StackScript.
+# STACKSCRIPT_ID: 688891
 
+# enable logging
 set -e
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
 
 # BEGIN CI-MODE
-if [[ -n ${DEBUG} ]]; then trap 'cleanup $? $LINENO' EXIT; fi
+#DEBUG="NO"
+if [[ -n ${DEBUG} ]]; then
+	if [ "${DEBUG}" == "NO" ]; then
+		trap 'cleanup $? $LINENO' EXIT
+	fi
+else
+	trap 'cleanup $? $LINENO' EXIT
+fi
+
+# cleanup will always happen. If DEBUG is passed and is anything
+# other than NO, it will always trigger cleanup. This is useful for
+# ci testing and passing vars to the instance.
+
 if [ "${MODE}" == "staging" ]; then
 	trap 'provision_failed $? $LINENO' ERR
 else
@@ -23,7 +36,7 @@ fi
 
 ## Discourse Settings
 # <UDF name="admin_email" label="Admin email address (becomes the Discourse admin account's login)" example="admin@example.com">
-# <UDF name="smtp_address" label="SMTP server address (optional — required for Discourse to send email)" example="smtp.mailgun.org" default="">
+# <UDF name="smtp_address" label="SMTP server address (optional - required for Discourse to send email)" example="smtp.mailgun.org" default="">
 # <UDF name="smtp_port" label="SMTP port" example="587" default="587">
 # <UDF name="smtp_user_name" label="SMTP username" default="">
 # <UDF name="smtp_password" label="SMTP password" default="">
@@ -36,7 +49,7 @@ fi
 # BEGIN CI-GH
 #GH_USER=""
 #BRANCH=""
-# git user and branch — set GH_USER + BRANCH to deploy from a fork/branch; defaults to upstream main
+# git user and branch - set GH_USER + BRANCH to deploy from a fork/branch; defaults to upstream main
 if [[ -n ${GH_USER} && -n ${BRANCH} ]]; then
 	echo "[info] git user and branch set.."
 	export GIT_REPO="https://github.com/${GH_USER}/marketplace-apps.git"
@@ -59,18 +72,24 @@ function provision_failed {
 }
 
 function cleanup {
-	if [ -d "${WORK_DIR}" ]; then rm -rf "${WORK_DIR}"; fi
+	if [ -d "${WORK_DIR}" ]; then 
+	  rm -rf "${WORK_DIR}"
+	fi
 }
 
 function udf {
 	local group_vars="${WORK_DIR}/${MARKETPLACE_APP}/group_vars/linode/vars"
 	sed 's/  //g' <<EOF >"${group_vars}"
-username: ${USER_NAME}
-admin_email: ${ADMIN_EMAIL}
-add_ons: [${ADD_ONS}]
+	# sudo username
+	username: ${USER_NAME}
+	admin_email: ${ADMIN_EMAIL}
+	# BEGIN CI-UDF-ADDONS
+	# addons
+	add_ons: [${ADD_ONS}]
+	# END CI-UDF-ADDONS
 EOF
 
-	# boolean conversion — UDFs arrive as strings; Ansible needs real booleans
+	# boolean conversion - UDFs arrive as strings; Ansible needs real booleans
 	if [ "${DISABLE_ROOT}" = "Yes" ]; then
 		echo "disable_root: true" >>"${group_vars}"
 	else
@@ -90,11 +109,14 @@ EOF
 	[ -n "${SMTP_USER_NAME}" ] && echo "smtp_user_name: \"${SMTP_USER_NAME}\"" >>"${group_vars}"
 	[ -n "${SMTP_PASSWORD}" ] && echo "smtp_password: \"${SMTP_PASSWORD}\"" >>"${group_vars}"
 
-	if [[ "${MODE}" == "staging" ]]; then
-		echo "mode: ${MODE}" >>"${group_vars}"
-	else
-		echo "mode: production" >>"${group_vars}"
-	fi
+  # staging or production mode (ci)
+    if [[ "${MODE}" == "staging" ]]; then
+      echo "[info] running in staging mode..."
+      echo "mode: ${MODE}" >> ${group_vars}
+    else
+      echo "[info] running in production mode..."
+      echo "mode: production" >> ${group_vars}
+    fi
 }
 
 function run {
@@ -103,19 +125,19 @@ function run {
 	git -C /tmp clone -b "${BRANCH}" "${GIT_REPO}"
 	cd "${WORK_DIR}/${MARKETPLACE_APP}"
 	python3 -m venv env
-	# shellcheck disable=SC1091
 	source env/bin/activate
 	pip install -r requirements.txt
 	ansible-galaxy install -r collections.yml
+
+	# populate group_vars
 	udf
-	export ANSIBLE_HOST_KEY_CHECKING=False
+	# run playbooks
 	ansible-playbook -v provision.yml && ansible-playbook -v site.yml
 }
 
 function installation_complete {
-	echo "Installation complete. Credentials are in /home/${USER_NAME}/.credentials"
+	echo "Installation Complete"
 }
 
 run
 installation_complete
-cleanup
