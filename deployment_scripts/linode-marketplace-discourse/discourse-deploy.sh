@@ -79,7 +79,7 @@ function cleanup {
 
 function udf {
 	local group_vars="${WORK_DIR}/${MARKETPLACE_APP}/group_vars/linode/vars"
-	sed 's/  //g' <<EOF >"${group_vars}"
+	sed 's/  //g' <<EOF > ${group_vars}
 	# sudo username
 	username: ${USER_NAME}
 	admin_email: ${ADMIN_EMAIL}
