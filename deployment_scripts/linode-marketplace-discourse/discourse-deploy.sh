@@ -80,13 +80,13 @@ function cleanup {
 function udf {
 	local group_vars="${WORK_DIR}/${MARKETPLACE_APP}/group_vars/linode/vars"
 	sed 's/  //g' <<EOF > ${group_vars}
-	# sudo username
-	username: ${USER_NAME}
-	admin_email: ${ADMIN_EMAIL}
-	# BEGIN CI-UDF-ADDONS
-	# addons
-	add_ons: [${ADD_ONS}]
-	# END CI-UDF-ADDONS
+# sudo username
+username: ${USER_NAME}
+admin_email: ${ADMIN_EMAIL}
+# BEGIN CI-UDF-ADDONS
+# addons
+add_ons: [${ADD_ONS}]
+# END CI-UDF-ADDONS
 EOF
 
 	# boolean conversion - UDFs arrive as strings; Ansible needs real booleans
