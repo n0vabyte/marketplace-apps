@@ -89,12 +89,10 @@ add_ons: [${ADD_ONS}]
 # END CI-UDF-ADDONS
 EOF
 
-	# boolean conversion - UDFs arrive as strings; Ansible needs real booleans
-	if [ "${DISABLE_ROOT}" = "Yes" ]; then
-		echo "disable_root: true" >>"${group_vars}"
-	else
-		echo "disable_root: false" >>"${group_vars}"
-	fi
+	if [ "$DISABLE_ROOT" = "Yes" ]; then
+    	echo "disable_root: yes" >> ${group_vars};
+  	else echo "Leaving root login enabled";
+  	fi
 
 	if [[ -n ${DOMAIN} ]]; then
 		echo "domain: ${DOMAIN}" >>"${group_vars}"
