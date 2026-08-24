@@ -44,6 +44,6 @@
     validate_certs: true
     status_code: [200, 301, 302]
   register: discourse_up
-  until: discourse_up.status is defined
+  until: discourse_up.status == 200
   retries: 30
   delay: 20
