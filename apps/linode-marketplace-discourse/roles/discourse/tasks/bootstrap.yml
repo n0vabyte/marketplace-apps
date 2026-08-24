@@ -29,15 +29,6 @@
     enabled: true
     daemon_reload: true
 
-- name: Wait for HTTPS
-  wait_for:
-    host: "{{ _domain }}"
-    port: 443
-    delay: 5
-    timeout: 300
-    state: started
-    active_connection_states: ESTABLISHED
-
 - name: Wait for Discourse to answer over HTTPS (includes first-run Let's Encrypt issuance)
   uri:
     url: "https://{{ _domain }}/"
