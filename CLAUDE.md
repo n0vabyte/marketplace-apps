@@ -1,1 +1,0 @@
-../marketplace-claude-skills/CLAUDE.md

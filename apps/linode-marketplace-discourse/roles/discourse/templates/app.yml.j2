@@ -16,14 +16,12 @@ expose:
 
 params:
   db_default_text_search_config: "pg_catalog.english"
-##  db_shared_buffers: "{{ discourse_db_shared_buffers }}"
   version: "{{ discourse_version }}"
 
 env:
   LC_ALL: en_US.UTF-8
   LANG: en_US.UTF-8
   LANGUAGE: en_US.UTF-8
-##  UNICORN_WORKERS: "{{ discourse_unicorn_workers }}"
 
   DISCOURSE_HOSTNAME: "{{ _domain }}"
   DISCOURSE_DEVELOPER_EMAILS: "{{ admin_email }}"
