@@ -34,7 +34,7 @@
     host: "{{ _domain }}"
     port: 443
     delay: 5
-    timeout: 180
+    timeout: 300
     state: started
     active_connection_states: ESTABLISHED
 
