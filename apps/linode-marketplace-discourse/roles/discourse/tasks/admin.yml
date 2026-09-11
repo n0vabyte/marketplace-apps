@@ -9,15 +9,58 @@
     dest: "{{ discourse_docker_dir }}/shared/standalone/seed_admin.rb"
     mode: '0600'
 
-- name: Seed admin account and enable local logins (idempotent — finds-or-creates, re-asserts state)
+#- name: Seed admin account and enable local logins (idempotent — finds-or-creates, re-asserts state)
+#  community.docker.docker_container_exec:
+#    container: app
+#    command: /var/www/discourse/bin/rails runner /shared/seed_admin.rb
+#  register: discourse_admin_seed
+#  until: discourse_admin_seed.rc == 0
+#  retries: 15
+#  delay: 15
+#  changed_when: "'admin=true' in discourse_admin_seed.stdout"
+
+
+- name: Create Discourse admin user via Rails runner
   community.docker.docker_container_exec:
     container: app
-    command: /var/www/discourse/bin/rails runner /shared/seed_admin.rb
-  register: discourse_admin_seed
-  until: discourse_admin_seed.rc == 0
-  retries: 15
-  delay: 15
-  changed_when: "'admin=true' in discourse_admin_seed.stdout"
+    user: discourse
+    # Passing the RAILS_ENV tells the runner to use production mode
+    environment:
+      RAILS_ENV: production
+    # Use argv for clean execution instead of worrying about escaping quotes
+    argv:
+      - bundle
+      - exec
+      - rails
+      - runner
+      - |
+        email = "{{ admin_email }}"
+        password = "{{ discourse_admin_password }}"
+        
+        user = User.find_by_email(email)
+        if user.nil?
+          user = User.new(email: email)
+          user.username = UserNameSuggester.suggest(user.email)
+        end
+        user.active = true
+        user.save!
+        user.grant_admin!
+        user.change_trust_level!(1) if user.trust_level < 1
+        user.email_tokens.update_all(confirmed: true)
+        user.activate
+        
+        # Off by default when the interactive wizard is bypassed (manual_install.md §8 Finding A).
+        SiteSetting.enable_local_logins = true
+        
+        # Must be a second save on the reloaded, already-persisted user — setting the password in the
+        # same save that creates the user does not persist the UserPassword row (manual_install.md §8
+        # Finding B).
+        user.reload
+        user.password = password
+        user.save!
+        
+        puts "admin=#{user.admin?} active=#{user.active} local_logins=#{SiteSetting.enable_local_logins}"
+
 
 - name: Remove admin-seed script (contains the generated admin password)
   file:
