@@ -26,6 +26,7 @@ env:
   DISCOURSE_HOSTNAME: "{{ _domain }}"
   DISCOURSE_DEVELOPER_EMAILS: "{{ admin_email }}"
   DISCOURSE_DB_PASSWORD: "{{ discourse_db_password }}"
+  LETSENCRYPT_ACCOUNT_EMAIL: '{{ admin_email }}'
 {% if smtp_address is defined and smtp_address | length > 0 %}
   DISCOURSE_SMTP_ADDRESS: "{{ smtp_address }}"
   DISCOURSE_SMTP_PORT: "{{ smtp_port | default(587) }}"
