@@ -12,7 +12,7 @@
 - name: Seed admin account and enable local logins (idempotent — finds-or-creates, re-asserts state)
   community.docker.docker_container_exec:
     container: app
-    command: bin/rails runner /shared/seed_admin.rb
+    command: /var/www/discourse/bin/rails runner /shared/seed_admin.rb
   register: discourse_admin_seed
   until: discourse_admin_seed.rc == 0
   retries: 15
