@@ -58,7 +58,7 @@ fi
 if [[ -n "${SMTP_ADDRESS}" ]]; then 
 	UDF_VARS["SMTP_ADDRESS"]="${SMTP_ADDRESS}"
 else 
-	UDF_VARS["SMTP_ADDRESS"]=""
+	UDF_VARS["SMTP_ADDRESS"]="${DEFAULT_DNS}"
 fi
 
 if [[ -n "${SMTP_PORT}" ]]; then 
@@ -70,13 +70,25 @@ fi
 if [[ -n "${SMTP_USER_NAME}" ]]; then 
 	UDF_VARS["SMTP_USER_NAME"]="${SMTP_USER_NAME}"
 else 
-	UDF_VARS["SMTP_USER_NAME"]=""
+	UDF_VARS["SMTP_USER_NAME"]="test"
 fi
 
 if [[ -n "${SMTP_PASSWORD}" ]]; then 
 	UDF_VARS["SMTP_PASSWORD"]="${SMTP_PASSWORD}"
 else 
-	UDF_VARS["SMTP_PASSWORD"]=""
+	UDF_VARS["SMTP_PASSWORD"]="testpassword"
+fi
+
+if [[ -n "${DISCOURSE_NOTIFICATION_EMAIL}" ]]; then 
+	UDF_VARS["DISCOURSE_NOTIFICATION_EMAIL"]="${DISCOURSE_NOTIFICATION_EMAIL}"
+else 
+	UDF_VARS["DISCOURSE_NOTIFICATION_EMAIL"]="noreply@${DEFAULT_DNS}"
+fi
+
+if [[ -n "${DISCOURSE_SMTP_DOMAIN}" ]]; then 
+	UDF_VARS["DISCOURSE_SMTP_DOMAIN"]="${DISCOURSE_SMTP_DOMAIN}"
+else 
+	UDF_VARS["DISCOURSE_SMTP_DOMAIN"]="${DEFAULT_DNS}"
 fi
 
 if [[ -n "${ADD_ONS}" ]]; then 
