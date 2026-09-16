@@ -40,7 +40,7 @@ fi
 # <UDF name="smtp_port" label="SMTP port" example="587" default="587">
 # <UDF name="smtp_user_name" label="SMTP username" default="">
 # <UDF name="smtp_password" label="SMTP password" default="">
-# <UDF name="discourse_notification_email" label="Dicourse notification email" default="">
+# <UDF name="smtp_notification_email" label="Dicourse notification email" default="">
 
 
 # BEGIN CI-ADDONS
