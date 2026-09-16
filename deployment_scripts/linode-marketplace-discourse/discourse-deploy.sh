@@ -40,6 +40,8 @@ fi
 # <UDF name="smtp_port" label="SMTP port" example="587" default="587">
 # <UDF name="smtp_user_name" label="SMTP username" default="">
 # <UDF name="smtp_password" label="SMTP password" default="">
+# <UDF name="discourse_notification_email" label="Dicourse notification email" default="">
+
 
 # BEGIN CI-ADDONS
 ## Addons
@@ -106,6 +108,7 @@ EOF
 	[ -n "${SMTP_PORT}" ] && echo "smtp_port: ${SMTP_PORT}" >>"${group_vars}"
 	[ -n "${SMTP_USER_NAME}" ] && echo "smtp_user_name: \"${SMTP_USER_NAME}\"" >>"${group_vars}"
 	[ -n "${SMTP_PASSWORD}" ] && echo "smtp_password: \"${SMTP_PASSWORD}\"" >>"${group_vars}"
+	[ -n "${SMTP_NOTIFICATION_EMAIL}" ] && echo "smtp_notification_email: \"${SMTP_NOTIFICATION_EMAIL}\"" >>"${group_vars}"
 
   # staging or production mode (ci)
     if [[ "${MODE}" == "staging" ]]; then

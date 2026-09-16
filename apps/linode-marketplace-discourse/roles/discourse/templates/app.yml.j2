@@ -15,16 +15,15 @@ env:
   LC_ALL: en_US.UTF-8
   LANG: en_US.UTF-8
   LANGUAGE: en_US.UTF-8
-  DISCOURSE_HOSTNAME: "{{ domain }}"
+  DISCOURSE_HOSTNAME: "{{ _domain }}"
   DISCOURSE_DEVELOPER_EMAILS: "{{ admin_email }}"
   LETSENCRYPT_ACCOUNT_EMAIL: "{{ admin_email }}"
-  DISCOURSE_SKIP_EMAIL_SETUP: '1'
   UNICORN_WORKERS: 8
   DISCOURSE_SMTP_ADDRESS: "{{ smtp_address }}"
   DISCOURSE_SMTP_PORT: '587'
   DISCOURSE_SMTP_USER_NAME: "{{ smtp_user_name }}"
   DISCOURSE_SMTP_PASSWORD: "{{ smtp_password }}"
-  DISCOURSE_NOTIFICATION_EMAIL: "{{ smtp_notif_email }}"
+  DISCOURSE_NOTIFICATION_EMAIL: "{{ smtp_notification_email }}"
   DISCOURSE_SMTP_DOMAIN: "{{ smtp_address }}"
 volumes:
   - volume:
